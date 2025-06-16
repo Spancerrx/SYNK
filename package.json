@@ -1,0 +1,16 @@
+{
+  "name": "synk",
+  "version": "1.0.0",
+  "description": "Real-time collaboration platform with video meetings, whiteboard, code editor, and chat — all in one place.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "concurrently \"npm run dev --prefix client\" \"npm run dev --prefix server\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

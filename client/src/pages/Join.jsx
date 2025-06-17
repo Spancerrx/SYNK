@@ -10,6 +10,10 @@ function Join(){
 
     const handleCreateRoom = () => {
         const newRoomId = uuidv4();
+        if(!username.trim()) {
+           alert("Please enter your username before creating a room.");
+           return;
+        }
         setRoomId(newRoomId);
     };
 
@@ -20,6 +24,9 @@ function Join(){
         }
         //connects to backend socket
         socket.emit("join", {roomId, username});
+
+        sessionStorage.setItem("username", username);
+        sessionStorage.setItem("roomId", roomId);
 
         navigate(`/room/${roomId}`,{ state: { username } }); //navigate to room
 

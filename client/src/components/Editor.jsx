@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import Editor from "@monaco-editor/react";
 import axios from 'axios';
 import socket from '../socket';
+import Whiteboard from '../components/Whiteboard';
 
 function CodeEditor({ roomId, username }) {
     const [code, setCode] = useState('// Start coding...');
@@ -105,6 +106,7 @@ function CodeEditor({ roomId, username }) {
                 <h4>Output: </h4>
                 <pre>{output}</pre>
             </div>
+            <Whiteboard roomId={roomId}/>
         </div>
     );
 };

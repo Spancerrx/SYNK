@@ -1,6 +1,7 @@
 import { useLocation, useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import CodeEditor from "../components/Editor";
+import ChatBox from '../components/ChatBox';
 
 function Room() {
   const { roomId } = useParams();
@@ -26,13 +27,16 @@ function Room() {
 
       {/* Code Editor Component */}
       <div style={{
-        marginTop: '2rem',
-        padding: '2rem',
-        background: '#f4f4f4',
-        borderRadius: '8px'
+          marginTop: '2rem',
+          padding: '2rem',
+          background: '#f4f4f4',
+          borderRadius: '8px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '2rem',
       }}>
         <CodeEditor roomId={roomId} username={username} />
-        <p>Whiteboard coming soon!</p>
+        <ChatBox roomId={roomId} username={username}/>
       </div>
     </div>
   );

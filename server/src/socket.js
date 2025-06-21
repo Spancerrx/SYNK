@@ -12,7 +12,7 @@ export default function initSocket(server) {
 
     io.on("connection", (socket) => {
         console.log("New client connected:", socket.id);
-
+        //join room
         socket.on("join", ({ roomId, username }) => {
             socket.join(roomId);
             console.log(`${username} joined room: ${roomId}`);
@@ -21,14 +21,12 @@ export default function initSocket(server) {
                 socket.emit("load-code", rooms[roomId]);
             }
         });
-
-        //editor sync
         socket.on("code-change", ({ roomId, code }) => {
-            rooms[roomId] = code;
-            socket.to(roomId).emit("code-update", code);
+                    rooms[roomId] = code;
+                    socket.to(roomId).emit("code-update", code);
         });
 
-        // drawing sync
+        // 🧑‍🎨 Whiteboard Drawing Sync
         socket.on("whiteboard-draw", (data) => {
             const { roomId, x0, y0, x1, y1, color, size, opacity } = data;
             if (!roomId) return;
@@ -40,10 +38,17 @@ export default function initSocket(server) {
             socket.to(roomId).emit("whiteboard-clear");
         });
 
+        // 💬 Chat Message Sync with Timestamp
+        socket.on("chat-message", (msg) => {
+            const { roomId } = msg;
+            if (!roomId) return;
+            socket.to(roomId).emit("chat-message", msg);
+        });
+
         socket.on("disconnect", () => {
             console.log("Client disconnected:", socket.id);
         });
     });
 
-    return io;
+            return io;
 }

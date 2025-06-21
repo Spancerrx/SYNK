@@ -23,7 +23,7 @@ function Join(){
             return;
         }
         //connects to backend socket
-        socket.emit("join", {roomId, username});
+        socket.emit("join", {roomId, username });
 
         sessionStorage.setItem("username", username);
         sessionStorage.setItem("roomId", roomId);

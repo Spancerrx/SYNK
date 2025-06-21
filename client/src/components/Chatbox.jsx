@@ -2,99 +2,98 @@ import React, { useEffect, useState, useRef } from 'react';
 import socket from '../socket';
 
 function ChatBox({ roomId, username }) {
+  const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState('');
-  const chatEndRef = useRef(null);
+  const messagesEndRef = useRef(null);
 
-  useEffect(() => {
-    if (!socket) return;
-
-    const handleMessage = (msg) => {
-      setMessages((prev) => [...prev, msg]);
-    };
-
-    socket.on('chat-message', handleMessage);
-
-    return () => {
-      socket.off('chat-message', handleMessage);
-    };
-  }, []);
-
-  const sendMessage = (e) => {
-    e.preventDefault();
-    if (!input.trim()) return;
-
-    const msg = {
-      roomId,
-      username,
-      text: input,
-      timestamp: Date.now(),
-    };
-
-    socket.emit('chat-message', msg);
-    setMessages((prev) => [...prev, msg]); // Show own message immediately
-    setInput('');
+  const sendMessage = () => {
+    if (message.trim()) {
+      const payload = {
+        roomId,
+        username,
+        message,
+        timestamp: new Date().toISOString(),
+      };
+      socket.emit('send-message', payload);
+      setMessages(prev => [...prev, payload]);
+      setMessage('');
+    }
   };
 
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    const handleReceive = (payload) => {
+      setMessages(prev => [...prev, payload]);
+    };
+
+    socket.on('receive-message', handleReceive);
+
+    return () => {
+      socket.off('receive-message', handleReceive);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
   }, [messages]);
+
+  const formatTime = (isoTime) => {
+    const date = new Date(isoTime);
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  };
 
   return (
     <div style={{
-      backgroundColor: '#ffffff',
-      padding: '1rem',
-      borderRadius: '8px',
+      marginTop: '2rem',
+      backgroundColor: '#fff',
       border: '1px solid #ccc',
+      borderRadius: '8px',
+      padding: '1rem',
       maxHeight: '300px',
       overflowY: 'auto',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '0.5rem'
     }}>
-      <h3 style={{ marginBottom: '1rem' }}>Chat</h3>
-
-      <div style={{ maxHeight: '180px', overflowY: 'auto', marginBottom: '1rem' }}>
-        {messages.map((msg, idx) => (
-          <div key={idx} style={{ marginBottom: '0.5rem' }}>
+      <h4>Chat</h4>
+      <div style={{ flex: 1, overflowY: 'auto' }}>
+        {messages.map((msg, index) => (
+          <div key={index} style={{
+            marginBottom: '0.5rem',
+            padding: '0.5rem',
+            backgroundColor: msg.username === username ? '#e0f7fa' : '#f1f1f1',
+            borderRadius: '5px'
+          }}>
             <strong>{msg.username}</strong>
-            <span style={{
-              fontSize: '0.75rem',
-              color: '#888',
-              marginLeft: '0.5rem',
-            }}>
-              {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+            <span style={{ fontSize: '0.8rem', color: '#888', marginLeft: '0.5rem' }}>
+              {formatTime(msg.timestamp)}
             </span>
-            <div>{msg.text}</div>
+            <div>{msg.message}</div>
           </div>
         ))}
-        <div ref={chatEndRef} />
+        <div ref={messagesEndRef} />
       </div>
 
-      <form onSubmit={sendMessage} style={{ display: 'flex', gap: '0.5rem' }}>
+      <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
         <input
           type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Type your message..."
-          style={{
-            flex: 1,
-            padding: '0.5rem',
-            borderRadius: '4px',
-            border: '1px solid #ccc',
-          }}
+          placeholder="Type a message..."
+          value={message}
+          onChange={e => setMessage(e.target.value)}
+          onKeyDown={e => e.key === 'Enter' && sendMessage()}
+          style={{ flex: 1, padding: '0.5rem', borderRadius: '4px', border: '1px solid #ccc' }}
         />
-        <button
-          type="submit"
-          style={{
-            padding: '0.5rem 1rem',
-            backgroundColor: '#007bff',
-            color: '#fff',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer',
-          }}
-        >
+        <button onClick={sendMessage} style={{
+          padding: '0.5rem 1rem',
+          borderRadius: '4px',
+          backgroundColor: '#007bff',
+          color: '#fff',
+          border: 'none'
+        }}>
           Send
         </button>
-      </form>
+      </div>
     </div>
   );
 }

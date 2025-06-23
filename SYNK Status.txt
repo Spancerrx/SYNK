@@ -1,0 +1,59 @@
+progressive roadmap of features, arranged by finishing levels — from most essential to advanced polish:
+
+---
+
+### ✅ **LEVEL 1: Foundation (Done)**
+
+* ✅ Real-time collaborative **code editor**
+* ✅ Real-time **whiteboard** with pen, eraser, clear, save
+* ✅ Code execution via Judge0
+* ✅ Room join with username
+* ✅ Real-time socket syncing
+
+---
+
+### 🔜 **LEVEL 2: Core Collaboration Features (Next Up)**
+
+1. 🔄 **Chat System** (text-based, per room)
+2. 👥 **Display active users** in the room
+3. 📋 **Show who is editing code or drawing**
+
+---
+
+### ⏳ **LEVEL 3: Session Management & Quality**
+
+4. 🔒 **Room access control** (room password, or invite link)
+5. 🧹 **Auto-clean empty rooms** on disconnect
+6. 📝 **Persistent whiteboard + code save** (in DB or JSON per room)
+7. 🧠 **Reconnect logic** for whiteboard & code after refresh
+
+---
+
+### 🚀 **LEVEL 4: Advanced Utility & Export**
+
+8. 🗃 **PDF Export** for whiteboard or code
+9. ⬇ **File upload/import** support for code
+10. 💾 **Save multiple files** or tabs per room
+11. 🎨 **Color-coded user cursors** on whiteboard and editor
+
+---
+
+### 🛡 **LEVEL 5: Production-ready Polish**
+
+12. 🔐 **User authentication**
+13. ⚡ **Rate limiting** & spam protection
+14. 📊 **Usage analytics or logs**
+15. 🌐 **Deployment to Vercel + Render + HTTPS**
+
+---
+
+### ✅ **Next: Chat System**
+
+Let’s start by building a simple **text-based chat system** (like Google Docs sidebar chat) that:
+
+* Allows users to send messages
+* Shows messages in real-time
+* Associates message with username
+* Clears on room exit
+
+**Ready to begin with Chat System?**

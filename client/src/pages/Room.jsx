@@ -16,6 +16,7 @@ function Room() {
         return;
     }
     sessionStorage.setItem("username", username);
+//     socket.emit("join",{roomId, username});
     console.log(`Joined room: ${roomId} as ${username}`);
     // later will connect socket whiteboard code editor etc
   }, [roomId, username, navigate]);

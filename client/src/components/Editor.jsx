@@ -41,7 +41,7 @@ function CodeEditor({ roomId, username }) {
     };
     useEffect(() => {
         if(!socket) return;
-        socket.emit("join", { roomId, username });
+//         socket.emit("join", { roomId, username });
         const handleCodeUpdate = (incomingCode) => {
             preventEmit.current = true;
             setCode(incomingCode);

@@ -8,7 +8,7 @@ export default function initSocket(server) {
     }
   });
 
-  const rooms = {}; // Structure: { roomId: { code: '', users: [] } }
+  const rooms = {}; // { roomId: { code: '', users: [] } }
 
   io.on("connection", (socket) => {
     console.log("New client connected:", socket.id);
@@ -16,7 +16,7 @@ export default function initSocket(server) {
     // Join Room
     socket.on("join", ({ roomId, username }) => {
       socket.join(roomId);
-      console.log(`${username} joined room: ${roomId}`);
+//      console.log(`${username} joined room: ${roomId}`);
 
       // Initialize room if doesn't exist
       if (!rooms[roomId]) {
@@ -25,9 +25,11 @@ export default function initSocket(server) {
           users: []
         };
       }
-
+      const userExists = rooms[roomId].users.some(u => u.id === socket.id);
       // Add user to room's user list
-      rooms[roomId].users.push({ id: socket.id, username });
+      if(!userExists) {
+        rooms[roomId].users.push({ id: socket.id, username });
+      }
 
       // Send existing code to the new user if present
       if (rooms[roomId].code) {
